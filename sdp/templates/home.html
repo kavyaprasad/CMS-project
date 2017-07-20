@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+
+<div id="yo">
+</div>	
+<body>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.get("/ajax_test/", function (data) {
+        	        	console.log(typeof(data));
+
+
+        	{% for elemet in data%}
+        	console.log("Im Here!");
+    	$( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.video}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+
+        	{% endfor %}
+
+        });
+    });
+</script>
+</body>
+</html> 

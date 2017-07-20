@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+
+<div style="float: right ; margin-top: 10px ; margin-right: 15px">
+    <button type="button" class="btn btn-success" onclick="location.href = '{% url "login" %}'">Login</button>
+<button type="button" class="btn btn-warning" onclick="location.href = '{% url "register" %}'">Register</button>
+</div>
+
+
+<div class='col-sm-6 col-sm-offset-3'>
+<h1>{{ title }}</h1>
+<hr/>
+
+<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
+{{ form|crispy }}
+<input type='submit' class='btn btn-default' value='{{ title }}' />
+</form>
+
+{% for message in messages%}
+<p><font size="6"> {{message}}</p></p>
+{% endfor %}
+</div>
+
+
+
+{% endblock content %}

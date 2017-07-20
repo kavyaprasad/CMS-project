@@ -1,0 +1,378 @@
+{% load staticfiles %}
+<!--DOCTYPE html -->
+<html>
+<head>
+<title>{% block head_title %}Feed Me! A CMS App{% endblock head_title %}</title>
+<!-- Latest compiled and minified CSS -->
+
+<!-- Optional theme -->
+
+<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' >
+
+<link href="http://vjs.zencdn.net/5.16.0/video-js.css" rel="stylesheet">
+
+<link href='{% static "videojs-preroll.css"%}' rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href='{% static "videojs.markers.css" %}' rel="stylesheet">
+<link rel="stylesheet" href="http://vjs.zencdn.net/5.0/video-js.min.css">
+<link rel='stylesheet' href='{% static "css/base.css" %}' />
+
+
+
+
+
+
+
+</head>
+    <body background-size: 80px 60px; backdrop-filter: 'blur(5px)' background= 'https://images5.alphacoders.com/454/454233.jpg'>
+
+
+        <div class='container'> 
+            <div class="well" style= "background-color: rgba(245, 245, 245, 0.2);" style="float: left;">
+               <h1 style="margin-top: 10px;"><font color = '#f9f9f9'> FeedMe! A CMS Project</font></h1>
+                    {% if request.user.is_authenticated %}
+                    <p style="font-size:30px"> Welcome {{ request.user.username.title }}</p>
+                    <a class="btn btn-success" href = '../../insert/'>Upload A Video</a>
+                    <a class="btn btn-warning" href = '../../search/'>Search A Video</a>
+                    <button type="button" class="btn btn-danger pull-right"  onclick="logout()" >Logout</button>
+                    {% endif %}
+                 </div>   
+            </div>
+            {% block content %}
+
+            {% endblock content %}
+        </div>
+
+          <!-- Modal -->
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://vjs.zencdn.net/5.16.0/video.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/4.2.5/videojs.ads.js"></script>
+    <script src='{% static "videojs-preroll.js" %}'></script>
+    <script>
+    function checkLoginState() {
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '393429464366767',
+                version    : 'v2.8',
+                status: true, 
+                cookie: true, 
+                xfbml: true, 
+                oauth:true
+            });
+
+            if (typeof(FB) != 'undefined' && FB != null ) {
+                FB.login(function(response) {
+                    // console.log(response);
+                    // console.log(FB.getAuthResponse()['accessToken']);
+                    FB.api('/me', { locale: 'en_US', fields: 'name, email' }, function(response){
+                        var data = {
+                                    email:response.email, 
+                                    name:response.name,
+                                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                                    authtoken:FB.getAuthResponse()['accessToken']
+                            };
+                        $.post("../../facebook/", data,function(data,status){
+                            console.log("\nStatus: " + status);
+                            if (status == "success"){
+                                $(location).attr("href", "../../landing/");
+                            }
+                        });
+                    });
+                }, {'scope':'email'});
+            }
+        };
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+            fjs.parentNode.insertBefore(js, fjs);
+        }
+        (document, 'script', 'facebook-jssdk'));
+
+
+    }
+
+    function logout() {
+
+        window.fbAsyncInit = function(){
+            FB.init({
+                appId      : '393429464366767',
+                version    : 'v2.8',
+                status: true, 
+                cookie: true, 
+                xfbml: true, 
+                oauth:true,
+            });
+
+                FB.getLoginStatus(handleSessionResponse);
+
+                function handleSessionResponse(){
+                    if (FB.getAccessToken()) {
+                        FB.logout(function(response) {
+                            window.location = '{% url "logout" %}';
+                        });
+                    }
+                    else {
+                        window.location = '{% url "logout" %}';
+                    }
+                }
+              
+        };
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+            fjs.parentNode.insertBefore(js, fjs);
+        }
+        (document, 'script', 'facebook-jssdk'));
+    }
+
+
+    </script>
+
+
+
+
+ <script type="text/javascript">
+
+    videojs('my-video', {}, function(){ 
+        var player = this;
+         player.preroll({
+         src:'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'});
+        });
+      
+
+//     var video = videojs('my-video');
+//     var text = "{{markers}}";
+//     abc = text.replace(/&quot;/g, '\"');
+//     efg = abc.replace(/&#39;,/g, '');
+//     x = efg.replace(/&#39;/g, '');
+//     var myjson = JSON.parse("["+x+"]");
+//     // var ijk = [{time: 9, text: "this"},{time: 15,  text: "is"},{time: 1,text: "so"},{time: 7,  text: "cool"}];
+//      //load markers
+//      video.markers({
+//         markers: myjson
+//      });
+    
+
+//  // $(document).ready( function() {
+//  //     $.get("/ajax_test/", function(data) {
+//  //        alert(data);
+//  //     });
+</script>
+<script src='{% static "videojs-transcript.js" %}'></script>
+<script src="http://players.brightcove.net/3676484086001/8fb8f3c6-5b2b-471f-953c-56d65267ff11_default/index.min.js"></script>
+<script src='{% static "videojs.cuepoints.js" %}'></script>
+<script src='{% static "videojs.endcapCTA.js" %}'></script>
+
+<script type="text/javascript">
+
+    // transcript
+
+var player = videojs('my-video', {
+  html5: {
+    nativeTextTracks: false
+  }
+});
+
+var video = videojs('my-video')
+player.textTracks()
+
+  var video = videojs('my-video').ready(function () {
+        // Set up any options.
+        var options = {
+            showTitle: false,
+            showTrackSelector: false,
+        };
+
+        // Initialize the plugin.
+        var transcript = this.transcript(options);
+
+        // Then attach the widget to the page.
+        var transcriptContainer = document.querySelector('#transcript');
+        transcriptContainer.appendChild(transcript.el());
+    });
+
+
+   video.endcapCTA({
+      html: '<section class="endcapCallToActionContent"><div id="loveToHearForm"></div></section>',
+      run: function() {
+        // This runs upon creation of endcapCTA, just after video starts playing
+      }
+    });
+    function watchAgain() {
+      video.play();
+    }
+    function submitAndSpin() {
+      $('.sending').show();
+      //
+      // Do form submission stuff here
+      // Hide/show the success/failure/sending <li>s
+      //
+      return false;
+    }
+    // prep the form to do JS magic if available
+
+
+
+
+
+
+
+    var jwplayer = videojs('my-video');
+    jwplayer.pause();
+// quiz starts here
+    videojs("my-video").ready(function(){
+        var myPlayer = videojs('my-video');
+        this.cuepoints();
+        this.addCuepoint({
+            namespace: "logger",
+            start: 02,
+            end: 30,
+            onStart: function(params){
+                if(params.error){
+                    console.error("Error at second 0");
+                }else{
+                    console.log("Log at second 0");
+                    myPlayer.pause();
+                }
+                 var clicked = false;
+    //var ques = {CHECK: "JHH", QUE: "BHJJ"};
+    var ques = 'the question'
+
+            if (true) {
+                clicked = true;
+                jwplayer.pause();
+                var bgdiv = document.createElement("div");
+                var texdiv = document.createElement("div");
+                var quizform = document.createElement("form");
+                var quizquestion = document.createElement("div");
+                var truebutton = document.createElement("input");
+                var truebuttondiv = document.createElement("div");
+                var falsebutton = document.createElement("input");
+                var falsebuttondiv = document.createElement("div");
+                var breaktag = document.createElement('br');
+                // var submit = document.createElement("button");
+                var submit = document.createElement('a');
+                //if (jwplayer.getRenderingMode() == "html5"){
+                var theBody = document.getElementById(player.id());
+                // } else {
+                //  var theBody = document.getElementById(player.id()+"_wrapper");
+                // }
+                var playerWidthPX2 = theBody.style.width;
+                var playerWidthPX = parseFloat(playerWidthPX2);
+                var playerHeightPX2 = theBody.style.height;
+                var playerHeightPX = parseFloat(playerHeightPX2);
+
+                bgdiv.setAttribute('id', 'bg');
+                bgdiv.style.height = playerHeightPX + "px";
+                bgdiv.style.width = playerWidthPX2;
+                bgdiv.style.background = "#333333";
+                bgdiv.style.opacity = "0.70";
+                bgdiv.style.position = "absolute";
+                bgdiv.style.zIndex = "900";
+
+                texdiv.style.textAlign = "center";
+                texdiv.style.paddingTop = playerHeightPX / 2.0;
+
+                quizquestion.innerHTML = ques;
+                quizquestion.style.fontFamily = "arial,_sans";
+                quizquestion.style.fontSize = "18px";
+                quizquestion.style.color = "#ffffff"
+
+                truebuttondiv.innerHTML = 'TRUE';
+                truebuttondiv.style.color = "#ffffff";
+                truebutton.name = 'quizanswer';
+                truebutton.value = 'True';
+                truebutton.type = 'radio';
+                truebutton.setAttribute('id', 'true');
+                truebutton.style.fontFamily = "arial,_sans";
+
+                falsebuttondiv.innerHTML = 'FALSE';
+                falsebuttondiv.style.color = "#ffffff"
+                falsebutton.name = 'quizanswer';
+                falsebutton.value = 'False';
+                falsebutton.type = 'radio';
+                falsebutton.setAttribute('id', 'false');
+                falsebutton.style.fontFamily = "arial,_sans";
+
+                var message = 'Submit';
+                submit.innerHTML = message;
+                submit.href = "#";
+                submit.style.textDecoration = "none";
+                submit.style.outline = "0";
+                submit.style.MozUserSelect = 'none';
+                submit.style.KhtmlUserSelect = 'none';
+                submit.style.WebkitUserSelect = 'none';
+                submit.style.OUserSelect = 'none';
+                submit.style.UserSelect = 'none';
+                submit.style.fontSize = "18px";
+                submit.style.color = "#ffffff";
+                submit.style.fontFamily = "arial,_sans";
+                submit.setAttribute('id', 'txt');
+
+                theBody.appendChild(bgdiv);
+                bgdiv.appendChild(texdiv);
+                texdiv.appendChild(quizform);
+                quizform.appendChild(breaktag);
+                quizform.appendChild(quizquestion);
+                quizform.appendChild(breaktag);
+                quizform.appendChild(truebuttondiv);
+                truebuttondiv.appendChild(truebutton);
+                quizform.appendChild(breaktag);
+                quizform.appendChild(falsebuttondiv);
+                falsebuttondiv.appendChild(falsebutton);
+                falsebuttondiv.appendChild(falsebutton);
+                quizform.appendChild(breaktag);
+                quizform.appendChild(submit);
+                quizform.appendChild(breaktag);
+
+                var ans = true;
+                var errordiv = document.createElement("div");
+                errordiv.innerHTML = 'Incorrect Answer. Try again!';
+                errordiv.style.visibility = "hidden";
+                errordiv.style.color = "#ffffff";
+                quizform.appendChild(errordiv);
+                quizform.appendChild(breaktag);
+                submit.onmouseup = function () {
+                    if ((document.getElementById("true").checked && ans == true) || (document.getElementById("false").checked && ans == false)) {
+                        bgdiv.style.display = "none";
+                        jwplayer.play();
+                    }
+                    else {
+                        errordiv.style.visibility = "visible";
+                    }
+
+                }
+                quizform.style.zIndex = "999";
+                submit.style.zIndex = "2000";
+                truebutton.style.zIndex = "999";
+                falsebutton.style.zIndex = "999";
+            }
+
+            },
+            onEnd: function(params){
+                console.log("Action ends at second 30");
+                myPlayer.play();
+            },
+            params: {error: false}
+        });
+    });
+
+
+
+
+</script>
+</html>
+
+
+
+

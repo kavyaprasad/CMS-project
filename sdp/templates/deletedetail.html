@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+
+<section id="main-content">
+  <section class="wrapper"> 
+        <div class="row">
+          
+            <div style="float:left;background-color: rgba(245, 245, 245, 0.4);" class= 'well col-sm-7 col-sm-offset'>
+
+                <div class ="well" style = "background-color: rgba(245, 245, 245, 0.4);">
+                <h1><font color="#000000">{{ instance.title}}</font></h1>
+                <div class="box follow-scroll">
+
+                <video
+                 id="video" 
+                 class="video-js vjs-default-skin"
+                controls 
+                preload="auto" 
+                width="640" 
+                height="360"
+                data-setup='{"width": 640, "height": 360,"playbackRates": [0.5, 1, 1.5, 2] }'>
+ <!--              <video id="my-video" class="video-js" controls preload="auto" width="650" controls autoplay data-setup="{}"> -->
+                <source src="{{instance.video.url}}" type="video/mp4">
+            <track kind="captions" src="https://walsh9.github.io/videojs-transcript/captions/captions.en.vtt" srclang="en" label="English" default>
+
+            </video>
+
+        </div>
+
+
+                <div>
+                    <p><big><font color="#000000"> Cuisine {{instance.cusine_type}},</font></big><p>
+                    <p><small><font color="#000000"> Uploaded On {{ instance.timestamp.date}}</font> </small> </p>
+                    <p><small><font color="#000000"> Duration {{ instance.time|time:"H:i:s"}}</font> </small> </p>
+
+                    <p><small><font color="#000000"> Added By {{ instance.uploaded_by}}</font></small> </p>
+                </div>
+             <a class="btn btn-Danger" href='../../delete/{{instance.id}}/'> Delete Video</a>
+
+            </div>
+
+               
+                
+            </div>
+
+                <div style="width: 35%; float:right; background-color: rgba(245, 245, 245, 0.4);" class="well col-xs-2">
+                    <p  class="text-center"><font color="#000000"> Recipe Details</font></p >
+                    <p  class="text-center"><font color="#000000"> {{instance.recipe}}</font></p >
+                </div>
+
+                <div style="width: 35%; float:right; background-color: rgba(245, 245, 245, 0.4);" class= 'well col-xs-2'>
+
+
+                    <div style="background-color: rgba(245, 245, 245, 0.4);" class="well">
+                    <p  class="text-center"><font color="#000000"> Reported By</font> </p >
+
+                        {% for obj in rel_instance%}
+                                              <div class="well" style="background-color: rgba(245, 245, 245, 0.4);">
+                                <p><font color="#000000">{{ obj.report_by}}</font></p>
+                                    <p><small><font color="#000000"> Commented on:-{{ obj.timestamp.date}}</font> </small> </p>
+                         </div>
+
+
+                        {% endfor %}
+
+                </div>
+
+                    <div style="background-color: rgba(245, 245, 245, 0.4);" class="well">
+                    <p  class="text-center"><font color="#000000"> Comments</font> </p >
+
+                        {% for obj in rel_instance1%}
+                        <div class="well" style="background-color: rgba(245, 245, 245, 0.4);">
+                                <p><font color="#000000">{{ obj.comment}}</font></p>
+                                <p><font color="#000000">Comment By:- {{ obj.comment_by}}</font></p>
+                                    <p><small><font color="#000000"> Commented on:-{{ obj.timestamp.date}}</font> </small> </p>
+                         </div>
+
+
+
+
+                        {% endfor %}
+
+                </div>
+
+                </div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            
+        </div>
+    </section>
+</section></br><br/>
+
+
+
+
+{% endblock content %}
+
+

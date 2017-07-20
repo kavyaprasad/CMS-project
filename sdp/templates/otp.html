@@ -1,0 +1,39 @@
+{% load crispy_forms_tags %}
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+</head>
+    <body background-size: 80px 60px; backdrop-filter: 'blur(5px)' background= 'https://images5.alphacoders.com/454/454233.jpg'>
+
+
+        <div class='container'> 
+            <div class="well" style= "background-color: rgba(245, 245, 245, 0.75);" style="float: left;">
+               <h1 style="margin-top: 10px;"><font face="Raleway" color=" #990033"><b> FeedMe! A CMS Project</b></font></h1>
+           	</div>
+
+<div style= "background-color: rgba(245, 245, 245, 0.75);" class='well col-sm-6 col-sm-offset-3'>
+		<h1><font color="#000000">{{ title }}</font></h1>
+		<p> Hey OTP is generated and sent to your Email {{request.user.email}} Please kindly  check </p>
+		<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
+			{{ form|crispy }}
+			<input type='submit' class='btn btn-default' value='{{ title }}' />
+		</form>
+		{% for message in messages %}
+			<p><big><font color="#000000">{{message}}</font></big></p>
+		{% endfor %}
+</div>
+        </div>
+
+          <!-- Modal -->
+    </body>
+
+
+    {% for message in messages %}
+    	<script>
+     		alert('{{ message }}')
+  		</script>
+ 	{% endfor %}
+	</body>
+</head>

@@ -1,0 +1,637 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+          <style> 
+            input[type=text] {
+                width: 130px;
+                box-sizing: border-box;
+                border: 2px solid #ccc;
+                border-radius: 4px;
+                font-size: 16px;
+                background-color: white;
+                background-image: url('searchicon.png');
+                background-position: 10px 10px; 
+                background-repeat: no-repeat;
+                padding: 12px 20px 12px 40px;
+                -webkit-transition: width 0.4s ease-in-out;
+                transition: width 0.4s ease-in-out;
+            }
+
+            input[type=text]:focus {
+                width: 50%;
+            }
+            select.form-control {
+              width:130px;
+          }
+          .select-style {
+              border: 1px solid #ccc;
+              width: 120px;
+              border-radius: 3px;
+              overflow: hidden;
+              background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+          }
+
+          .select-style select {
+              padding: 5px 8px;
+              width: 130%;
+              border: none;
+              box-shadow: none;
+              background: transparent;
+              background-image: none;
+              -webkit-appearance: none;
+          }
+
+          .select-style select:focus {
+              outline: none;
+          }
+
+
+           .ex
+           {
+            margin:auto;
+            width:90%;
+            padding:10px;
+            border:outset;
+            display:inline-block;
+
+           }
+            </style>
+
+  
+<div class="container">
+    <div style= "background-color: rgba(245, 245, 245, 0.4);" class='well col-sm-12'>
+
+
+
+          
+          <form method = 'GET' action= '' >
+              <div style="float:left" >
+                <label><font size="6"><b>Select list:</b></font></label><br/>
+                <input list="browsers" name="browser">
+                <datalist id="browsers">
+                  <option value="Title">Title</option>
+                  <option value="Cuisine">Cuisine</option>
+                  <option value="User">User</option>
+                  <option value="Tag">Tag</option>
+                </datalist>
+            </div><br/><br/><br/><br/>
+            <div class="form-group">
+            <input type= 'text' name= 'q' placeholder= 'Search' value='{{ request.GET.q }}'/>
+            <button type= 'submit' class="btn btn-default">   <span class="glyphicon glyphicon-search"></span>
+            </button>
+            </div>
+          </form></br>
+          <div id="clickme" style=" display:block; background-color: rgba(245, 245, 245, 0.4);" class="well col-sm-8">
+                <h1 > <font color="#000000">Advanced Filter</font></h1><br/>  
+                  <div class="row">
+                  <div class=" col-sm-4">
+                    <label >Select Time:</label><br/>
+                    <div class="select-style"> 
+                    <select id="single">
+                      <option>PleaseSelect</option>
+                      <option>Lastweek</option>
+                      <option>Lastmonth</option>  
+                      <option>Today</option>
+                    </select>
+                     </div>
+                    </div> 
+                      <div class=" col-sm-4">
+                      <label >Select Duration:</label>
+                     <div class="select-style">
+                    <select id="other">
+                      <option>PleaseSelect</option>
+                      <option>Short < 4 mins</option>
+                      <option>Long > 20 mins</option>
+                    </select>
+                    </div>
+                  </div>
+                    <div  class=" col-sm-4">
+                    <label >Order By:</label>
+                    <div class="select-style">
+                    <select id="category">
+                      <option>PleaseSelect</option>
+                      <option>Rating</option>
+                      <option>Most Viewed</option>
+                    </select>
+                    </div>
+                    </div>
+                  </div>   
+            </div>
+
+
+
+          <div class="row" id = "yo">
+          {% for obj in object_list %}
+            <div class="col-sm-8">
+            <div class="well">
+              <div class="caption" >
+                  <p><big><font color="#000000"> {{ obj.title}}</font> </big> </p> 
+                <a href="../../videodetail/{{ obj.id }}/">
+                    <video width="200" controls name='media'>
+                      <source src="{{obj.video.url}}" type="video/mp4">
+                    </video>
+                    <p><small> Cusine {{ obj.cusine_type}} </small> </p>
+                    <p><small> Uploaded On:-{{ obj.timestamp.date}} </small> </p>
+                    <p><small> Added By:-{{ obj.uploaded_by}}</small> </p>
+                    <p><small> Duration:-{{ obj.time|time:"H:i:s" }}</small> </p>
+                    <p><small> Views:- {{ obj.views_set.count }} </small> </p>
+                    <p><small>Likes:- {{obj.rating_set.count}}</small></p>
+                </a>
+              </div>
+            </div>
+
+    </div><br/>
+    {% endfor %}
+              </div>
+
+    {% for message in messages %}
+    <script>alert('{{message}}');
+    console.log(typeof("{{message}}"));
+    </script>
+    {% endfor %}
+    <div class="pagination">
+      <span class="step-links">
+          {% if object_list.has_previous %}
+            <a href="?page={{ object_list.previous_page_number }}&q={{request.GET.q}}"><font size="5">previous</font></a>
+          {% endif %}
+
+          <span class="current">
+              <font size="5">Page </font>{{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+          </span>
+
+        {% if object_list.has_next %}
+            <a href="?page={{ object_list.next_page_number }}&q={{request.GET.q}}"><font size="5">next</font></a>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+</div>
+
+
+          
+
+<script type="text/javascript">
+var object_list = '{{element_list}}';
+
+function displayVals() {
+  var singleValues = $( "#single" ).val();
+  var multipleValues = $( "#category" ).val();
+  var otherValues = $("#other").val();
+  // When using jQuery 3:
+  // var multipleValues = $( "#multiple" ).val();
+  // $( "p" ).html( "<b>Single:</b> " + singleValues +"<b>Other:</b>"+otherValues+
+  //   " <b>Multiple:</b> " + multipleValues.join( ", " ) );
+
+
+  if(singleValues=="Lastweek" && otherValues == "Short < 4 mins" && multipleValues =="Rating"){
+    $('#yo').empty();
+      {% for element in object_list|dictsort:"rating_set.count" reversed %}
+      {% if element.time|time:"H:i:s" < "00:04:00" and lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+  }
+else if (singleValues == "Lastweek" && otherValues == "Long > 20 mins" && multipleValues=="Rating"){
+$('#yo').empty();
+      {% for element in object_list|dictsort:"rating_set.count" reversed %}
+      {% if element.time|time:"H:i:s" > "00:20:00" and lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d" %}
+
+    $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+                   
+                    
+    {% endif %}
+    {% endfor %}
+
+}
+else if (singleValues == "Lastweek" && otherValues == "Short < 4 mins" && multipleValues=="Most Viewed"){
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"views_set.count" reversed %}
+    {% if element.time|time:"H:i:s" < "00:04:00" and lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+}
+else if (singleValues == "Lastweek" && otherValues == "Long > 20 mins" && multipleValues=="Most Viewed"){
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"views_set.count" reversed %}
+    {% if element.time|time:"H:i:s" > "00:20:00" and lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+
+
+
+
+
+else if (singleValues == "Lastmonth" && otherValues == "Long > 20 mins" && multipleValues=="Rating"){
+
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"rating_set.count" reversed %}
+  {% if element.time|time:"H:i:s" > "00:20:00" and lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+}
+
+else if (singleValues == "Lastmonth" && otherValues == "Long > 20 mins" && multipleValues=="Most Viewed"){
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"views_set.count" reversed %}
+    {% if element.time|time:"H:i:s" > "00:20:00" and lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+
+
+}
+else if (singleValues == "Lastmonth" && otherValues == "Short < 4 mins" && multipleValues=="Rating"){
+    $('#yo').empty();
+      {% for element in object_list|dictsort:"rating_set.count" reversed %}
+      {% if element.time|time:"H:i:s" < "00:04:00" and lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+
+
+
+
+
+
+else if (singleValues == "Lastmonth" && otherValues == "Short < 4 mins" && multipleValues=="Most Viewed"){
+    $('#yo').empty();
+      {% for element in object_list|dictsort:"views_set.count" reversed %}
+      {% if element.time|time:"H:i:s" < "00:04:00" and lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+else if (singleValues == "Today" && otherValues == "Long > 20 mins" && multipleValues=="Rating"){
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"rating_set.count" reversed %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date and  element.time|time:"H:i:s" > "00:20:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+
+else if (singleValues == "Today" && otherValues == "Long > 20 mins" && multipleValues=="Most Viewed"){
+
+
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"views_set.count" reversed %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date and  element.time|time:"H:i:s" > "00:20:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+
+
+
+}
+else if (singleValues == "Today" && otherValues == "Short < 4 mins" && multipleValues=="Rating"){
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"rating_set.count" reversed %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date and  element.time|time:"H:i:s" < "00:04:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+
+
+
+}
+else if (singleValues == "Today" && otherValues == "Short < 4 mins" && multipleValues=="Most Viewed"){
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"rating_set.count" reversed %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date and  element.time|time:"H:i:s" < "00:04:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+}
+else if (singleValues == "Lastweek" && otherValues == "Short < 4 mins" && multipleValues=="PleaseSelect"){
+
+    $('#yo').empty();
+      {% for element in object_list%}
+      {% if element.time|time:"H:i:s" < "00:04:00" and lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+
+
+}
+else if (singleValues == "Lastweek" && otherValues == "Long > 20 mins" && multipleValues=="PleaseSelect"){
+
+    $('#yo').empty();
+      {% for element in object_list%}
+      {% if element.time|time:"H:i:s" > "00:20:00" and lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+
+else if (singleValues == "Lastmonth" && otherValues == "Short < 4 mins" && multipleValues=="PleaseSelect"){
+
+    $('#yo').empty();
+      {% for element in object_list%}
+      {% if element.time|time:"H:i:s" < "00:04:00" and lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+
+
+}
+else if (singleValues == "Lastmonth" && otherValues == "Long > 20 mins" && multipleValues=="PleaseSelect"){
+
+
+    $('#yo').empty();
+      {% for element in object_list%}
+      {% if element.time|time:"H:i:s" > "00:20:00" and lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+
+
+
+}
+
+else if (singleValues == "Today" && otherValues == "Short < 4 mins" && multipleValues=="PleaseSelect"){
+  $('#yo').empty();
+
+  {% for element in object_list %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date and  element.time|time:"H:i:s" < "00:04:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+}
+else if (singleValues == "Today" && otherValues == "Long > 20 mins" && multipleValues=="PleaseSelect"){
+ $('#yo').empty();
+
+  {% for element in object_list %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date and  element.time|time:"H:i:s" > "00:20:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+
+
+
+else if (singleValues == "LastWeek" && otherValues == "PleaseSelect" && multipleValues=="Rating"){
+
+
+    $('#yo').empty();
+      {% for element in object_list|dictsort:"rating_set.count" reversed%}
+      {% if  lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+
+
+}
+else if (singleValues == "Lastweek" && otherValues == "PleaseSelect" && multipleValues=="Most Viewed"){
+    $('#yo').empty();
+      {% for element in object_list|dictsort:"views_set.count" reversed%}
+      {% if  lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+}
+else if (singleValues == "Lastmonth" && otherValues == "PleaseSelect" && multipleValues=="Rating"){
+    $('#yo').empty();
+      {% for element in object_list|dictsort:"rating_set.count" reversed%}
+      {% if  lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+else if (singleValues == "Lastmonth" && otherValues == "PleaseSelect" && multipleValues=="Most Viewed"){
+    $('#yo').empty();
+      {% for element in object_list|dictsort:"views_set.count" reversed%}
+      {% if  lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d"%}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+
+else if (singleValues == "Today" && otherValues == "PleaseSelect" && multipleValues=="Rating"){
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"rating_set.count" reversed %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+else if (singleValues == "Today" && otherValues == "PleaseSelect" && multipleValues=="Most Viewed"){
+
+  $('#yo').empty();
+
+  {% for element in object_list|dictsort:"views_set.count" reversed %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+}
+
+else if (singleValues == "PleaseSelect" && otherValues == "Short < 4 mins" && multipleValues=="Rating"){
+
+ $('#yo').empty();
+
+  {% for element in object_list|dictsort:"rating_set.count" reversed %}
+    {% if element.time|time:"H:i:s" < "00:04:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+
+
+
+
+}
+else if (singleValues == "PleaseSelect" && otherValues == "Short < 4 mins"&& multipleValues=="Most Viewed"){
+ $('#yo').empty();
+
+  {% for element in object_list|dictsort:"views_set.count" reversed %}
+    {% if element.time|time:"H:i:s" < "00:04:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+
+
+else if (singleValues == "PleaseSelect" && otherValues == "Long > 20 mins" && multipleValues=="Rating"){
+ $('#yo').empty();
+
+  {% for element in object_list|dictsort:"rating_set.count" reversed %}
+    {% if element.time|time:"H:i:s" > "00:20:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+else if (singleValues == "PleaseSelect" && otherValues == "Long > 20 mins" && multipleValues=="Most Viewed"){
+ $('#yo').empty();
+
+  {% for element in object_list|dictsort:"views_set.count" reversed %}
+    {% if element.time|time:"H:i:s" > "00:20:00" %}
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endif %}
+      {% endfor %}
+}
+
+else if (singleValues == "PleaseSelect" && otherValues == "PleaseSelect" && multipleValues=="Rating"){
+    $('#yo').empty();
+    {% for element in object_list|dictsort:"rating_set.count" reversed %}
+
+    $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+                   
+    {% endfor %}
+}
+else if (singleValues == "PleaseSelect" && otherValues == "PleaseSelect" && multipleValues=="Most Viewed"){
+    $('#yo').empty();
+    {% for element in object_list|dictsort:"views_set.count" reversed %}
+
+    $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+                   
+    {% endfor %}
+}
+
+else if (singleValues == "Today" && otherValues == "PleaseSelect" && multipleValues=="PleaseSelect"){
+    $('#yo').empty();
+    {% for element in object_list %}
+    {% now "Y-m-d" as todays_date %}
+    {% if element.timestamp|date:"Y-m-d" == todays_date %}
+
+    $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p>Filtering Results on Uploaded Today</p><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+                   
+    {% endif %}
+    {% endfor %}
+
+}
+else if (singleValues == "Lastweek" && otherValues == "PleaseSelect" && multipleValues=="PleaseSelect"){
+   $('#yo').empty();
+    {% for element in object_list %}
+    {% if lastWeek|date:"Y-m-d" < element.timestamp|date:"Y-m-d" %}
+
+    $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><p>Filtering Results on Uploaded Lastweek to Till Date</p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+                   
+    {% endif %}
+    {% endfor %}
+}
+
+
+else if (singleValues == "Lastmonth" && otherValues == "PleaseSelect" && multipleValues=="PleaseSelect"){
+    $('#yo').empty();
+    console.log("ASDAS!");
+    {% for element in object_list %}
+    {% if lastMonth|date:"Y-m-d" < element.timestamp|date:"Y-m-d" %}
+
+    $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><p>Filtering Results on Uploaded LastMonth to Till Date</p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+                   
+    {% endif %}
+    {% endfor %}
+}
+
+
+else if (singleValues == "PleaseSelect" && otherValues == "Short < 4 mins" && multipleValues=="PleaseSelect"){
+    $('#yo').empty();
+    {% for element in object_list %}
+    {% if element.time|time:"H:i:s" < "00:04:00" %}
+
+    $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+                   
+                    
+    {% endif %}
+    {% endfor %}
+
+
+}
+else if (singleValues == "PleaseSelect" && otherValues == "Long > 20 mins" && multipleValues=="PleaseSelect"){
+    $('#yo').empty();
+    {% for element in object_list %}
+    {% if element.time|time:"H:i:s" > "00:20:00" %}
+
+    $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>"); 
+                   
+                    
+    {% endif %}
+    {% endfor %}
+}
+
+
+else{
+    $('#yo').empty();
+
+        {% for element in object_list %}
+
+      $( "#yo" ).append( "<div class='col-sm-8'><div class='well'><div class='caption' ><p><big><font color='#000000'> {{ element.title}}</font> </big> </p><a href='../../videodetail/{{ element.id }}/'> <video width='200 controls name='media'><source src='{{element.video.url}}' type='video/mp4'></video><p><small> Cusine {{ element.cusine_type}}</small></p><p><small> Uploaded On:-{{ element.timestamp.date}}</small></p><p><small> Added By:-{{ element.uploaded_by}}</small> </p><p><small> Duration:-{{ element.time|time:'H:i:s' }}</small> </p><p><small> Views:- {{ element.views_set.count }} </small> </p><p><small>Likes:- {{element.rating_set.count}}</small></p></a></div></div>");                     
+      {% endfor %}
+}
+}
+
+
+$( "select" ).change( displayVals );
+displayVals();
+
+
+
+
+</script>
+
+
+
+{% endblock content %}

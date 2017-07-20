@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+	<div style= "background-color: rgba(245, 245, 245, 0.4);" class='well col-sm-6 col-sm-offset-3'>
+
+		<h1><font color="#000000">{{ title }}</font></h1><hr/>
+		<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
+			{{ form|crispy }}
+			<input type='submit' class='btn btn-primary' value='{{ title }}' />
+		</form>
+		{% for message in messages %}
+			<p><font color="#000000">{{message}}</font></p>
+		{% endfor %}
+		<button type="button" class="btn btn-success" onclick="location.href = '{% url "login" %}'">Login</button>
+
+	</div>
+    {% for message in messages %}
+    	<script>
+     		alert('{{ message }}')
+  		</script>
+ 	{% endfor %}
+
+
+{% endblock content %}

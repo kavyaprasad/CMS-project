@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div style = " height: 50px">
+	<div style="float: right ; margin-top: 10px ; margin-right: 100px">
+	    <button type="button" class="btn btn-success" onclick="location.href = '{% url "login" %}'">Login</button>
+		<button type="button" class="btn btn-warning" onclick="location.href = '{% url "register" %}'">Register</button>
+	</div>
+<div>
+{% endblock content %}
+

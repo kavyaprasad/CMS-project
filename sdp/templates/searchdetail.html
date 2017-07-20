@@ -1,0 +1,624 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+<style>
+.social-like, .social-dislike {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    /*width: 48%;*/
+    background-color: #03A9F4;
+    color: #fff;
+}
+
+.social-like {
+    border-top-left-radius: 5px;
+}
+
+.social-dislike {
+    border-top-right-radius: 5px;
+}
+
+.count, .like, .dislike {
+    padding:10px;
+}
+
+.count, .dislike {
+    background-color: #03A9F4;
+    border-radius: 50%;
+    font-size:12px;
+}
+
+.dislike {
+    margin-left: -13px;
+}
+
+.count {
+    margin-right: -10px;
+    }
+
+
+
+@import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css);
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
+
+
+/* Global Button Styles */
+a.animated-button:link, a.animated-button:visited {
+    position: relative;
+    display: block;
+    margin: 30px auto 0;
+    padding: 14px 15px;
+    color: #fff;
+    font-size:14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    letter-spacing: .08em;
+    border-radius: 0;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.2);
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+}
+a.animated-button:link:after, a.animated-button:visited:after {
+    content: "";
+    position: absolute;
+    height: 0%;
+    left: 50%;
+    top: 50%;
+    width: 150%;
+    z-index: -1;
+    -webkit-transition: all 0.75s ease 0s;
+    -moz-transition: all 0.75s ease 0s;
+    -o-transition: all 0.75s ease 0s;
+    transition: all 0.75s ease 0s;
+}
+a.animated-button:link:hover, a.animated-button:visited:hover {
+    color: #FFF;
+    text-shadow: none;
+}
+a.animated-button:link:hover:after, a.animated-button:visited:hover:after {
+    height: 450%;
+}
+a.animated-button:link, a.animated-button:visited {
+    position: relative;
+    display: block;
+    margin: 30px auto 0;
+    padding: 14px 15px;
+    color: #fff;
+    font-size:14px;
+    border-radius: 0;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    letter-spacing: .08em;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.2);
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+}
+/* Thar Buttons */
+
+a.animated-button.thar-one {
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    border: 2px solid #F7CA18;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+a.animated-button.thar-one:hover {
+    color: #000 !important;
+    background-color: transparent;
+    text-shadow: none;
+}
+a.animated-button.thar-one:hover:before {
+    bottom: 0%;
+    top: auto;
+    height: 100%;
+}
+a.animated-button.thar-one:before {
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 0px;
+    width: 100%;
+    z-index: -1;
+    content: '';
+    color: #000 !important;
+    background: #F7CA18;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+a.animated-button.thar-two {
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    border: 2px solid #F7CA18;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+a.animated-button.thar-two:hover {
+    color: #000 !important;
+    background-color: transparent;
+    text-shadow: ntwo;
+}
+a.animated-button.thar-two:hover:before {
+    top: 0%;
+    bottom: auto;
+    height: 100%;
+}
+a.animated-button.thar-two:before {
+    display: block;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    height: 0px;
+    width: 100%;
+    z-index: -1;
+    content: '';
+    color: #000 !important;
+    background: #F7CA18;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+}
+a.animated-button.thar-three {
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    border: 2px solid #F7CA18;
+    transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+0s;
+}
+a.animated-button.thar-three:hover {
+    color: #000 !important;
+    background-color: transparent;
+    text-shadow: nthree;
+}
+a.animated-button.thar-three:hover:before {
+    left: 0%;
+    right: auto;
+    width: 100%;
+}
+a.animated-button.thar-three:before {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 100%;
+    width: 0px;
+    z-index: -1;
+    content: '';
+    color: #000 !important;
+    background: #F7CA18;
+    transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+0s;
+}
+a.animated-button.thar-four {
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    border: 2px solid #F7CA18;
+    transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+0s;
+}
+a.animated-button.thar-four:hover {
+    color: #000 !important;
+    background-color: transparent;
+    text-shadow: nfour;
+}
+a.animated-button.thar-four:hover:before {
+    right: 0%;
+    left: auto;
+    width: 100%;
+}
+a.animated-button.thar-four:before {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 0px;
+    z-index: -1;
+    content: '';
+    color: #000 !important;
+    background: #F7CA18;
+    transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+0s;
+}@keyframes heartbeat
+{
+  0%
+  {
+    transform: scale( .75);
+  }
+  
+  20%
+  {
+    transform: scale( 1);
+  }
+  
+  40%
+  {
+    transform: scale( .75);
+  }
+  
+  60%
+  {
+    transform: scale( 1);
+  }
+  80% {
+    transform: scale( .75);
+  }
+  
+  100%
+  {
+    transform: scale( .75);
+  }
+}
+
+#heart
+{
+  position: relative;
+  width: 10px;
+  height: 50px;
+  animation: heartbeat 1s infinite;
+}
+
+#heart:before,
+#heart:after
+{
+  position: absolute;
+  content: "";
+  left: 50px;
+  top: 0;
+  width: 50px;
+  height: 80px;
+  background: red;
+  -moz-border-radius: 50px 50px 0 0;
+  border-radius: 50px 50px 0 0;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  -webkit-transform-origin: 0 100%;
+  -moz-transform-origin: 0 100%;
+  -ms-transform-origin: 0 100%;
+  -o-transform-origin: 0 100%;
+  transform-origin: 0 100%;
+}
+
+#heart:after
+{
+  left: 0;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform-origin: 100% 100%;
+  -moz-transform-origin: 100% 100%;
+  -ms-transform-origin: 100% 100%;
+  -o-transform-origin: 100% 100%;
+  transform-origin: 100% 100%;
+}
+
+#hover-content {
+    display:none;
+}
+#parent:hover #hover-content {
+    display:block;
+}
+</style>
+<section id="main-content">
+  <section class="wrapper"> 
+        <div class="row">
+          
+            <div style="float:left;background-color: rgba(245, 245, 245, 0.4);" class= 'well col-sm-7 col-sm-offset'>
+                <h1><font color="#000000">{{ instance.title}}</font></h1>
+                <div class ="well" style = "background-color: rgba(245, 245, 245, 0.4);">
+
+                <div class="box follow-scroll">
+                <div id = "thumbnail">
+
+                <video
+                id="my-video" 
+                class="video-js vjs-default-skin"
+                controls
+                autoplay 
+                preload="auto" 
+                width="640" 
+                height="360"
+                data-setup='{"width": 640, "height": 360,"playbackRates": [0.5, 1, 1.5, 2] }'>
+ <!--              <video id="my-video" class="video-js" controls preload="auto" width="650" controls autoplay data-setup="{}"> -->
+                <source src="{{instance.video.url}}" type="video/mp4">
+            <track kind="captions" src="{{instance.subtitle.url}}" srclang="en" label="English" default>
+
+            </video>
+            </div>
+        </div>
+
+
+                <div id="transcript" class="well col-sm-12 " style="background-color: rgba(245, 245, 245, 0.4);"></div>
+                <label><font size="4">ShowCaptions</font></label><input id = "pChk" type="checkbox" name="colorCheckbox" value="ShowCaptions">
+                <div>
+                    <p><big><font color="#000000"> Cuisine {{instance.cusine_type}},</font></big><p>
+                    <p><small><font color="#000000"> Uploaded On {{ instance.timestamp.date}}</font> </small> </p>
+                    <p><small><font color="#000000"> Duration {{ instance.time|time:"H:i:s"}}</font> </small> </p>
+
+                    <p><small><font color="#000000"> Added By {{ instance.uploaded_by}}</font></small> </p>
+                    <a class="btn btn-info" onclick="report()" >Report This Video</a>
+                    <a class="btn btn-info" onclick="subscribe()" >Subscribe</a>
+
+                </div><br/><br/>
+                <div id="parent">
+                    <p><font size = "4">Hover Here To See Video Controls</font></p>
+                    <div id="hover-content">
+                        <p>Space to PAUSE/PLAY</p><br/>
+                        <p>Up and Down Arrow to Volume Up and Down</p><br/>
+                        <p>Right and Left to Fast Forward Video</p><br/>
+			<p>F for Full Screen</p><br/>
+			<p>Click On 1-10 to get to the percentage of Video finished</p><br/>
+                    </div>
+                </div>
+                <div style ="float:left;"><br/><p><big><font color="#ffffff"> click the heart to add to playlist</font></big></p>
+                    <div id="heart" style="float:left; height: 100px; width:100px" onclick="addToPlaylist()"><a class="button" ></a></div></div>
+                 <div style ="float:right;"><br/>
+                    <button class="social-like"  onclick="like()">
+                    <span class="like"><i class="glyphicon glyphicon-thumbs-up"></i></span>
+                    <span class="count" >{{likes_count}}</span>
+                </button>
+                &nbsp;
+                <button class="social-dislike" onclick="dislike()" >
+                    <span class="dislike" >{{dislikes_count}}</span>
+                    <span class="like"><i class="glyphicon glyphicon-thumbs-down"></i></span>
+                </button>
+                    <h2><big> Views {{count}}</big></h2>
+                </div>
+                       
+            </div>
+
+               
+                
+            </div>
+
+                <div style="width: 35%; float:right; background-color:rgba(245,245,245,0.70)" class="well col-xs-2">
+                    <p  class="text-center"><font face="Raleway" size="4" color="#000000"> Recipe Details</font></p >
+                    <p  class="text-center"><font face="Raleway" size="3" color="#000000"> {{instance.recipe}}</font></p >
+                </div>
+
+                <div style="width: 35%; float:right; background-color: rgba(245, 245, 245, 0.4);" class= 'well col-xs-2'>
+
+                      <form>
+                        <div class="form-group">
+                          <label for="comment">Comment:</label>
+                          <textarea class="form-control" rows="2" id="comment"></textarea>
+                        </div>
+                      </form>
+                    <input type="submit" value="Submit" onclick="showData()"><br/><br/>
+
+                    <div style="background-color: rgba(245, 245, 245, 0.4);" class="well">
+
+                    <p  class="text-center"><font color="#000000"> Comments</font> </p >
+                        {% for obj in rel_instance%}
+                        <div class="well" style="background-color: rgba(245, 245, 245, 0.4);">
+                                <p><font size="3" color="#000000">{{ obj.comment}}</font></p>
+                                <p><font  color="#000000">Comment By:- {{ obj.comment_by}}</font></p>
+                                <p><small><font color="#000000"> Commented on:-{{ obj.timestamp.date}}</font> </small> </p>
+                                {% if request.user.is_superuser %}
+                                <a class="btn btn-Danger" href='../../commentdelete/{{obj.id}}/'> Delete Comment</a>
+                                {% endif %}
+
+                         </div>
+
+                        {% endfor %}
+
+                </div>
+
+                </div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </div>
+                <div style="width: 35%; float:right; background-color: rgba(245, 245, 245, 0.4);" class="well col-xs-2">
+
+                    <p  class="text-center"><font color="#000000"> Related Videos</font> </p >
+                        {% for obj in queryset%}
+                        {% if obj.cusine_type == instance.cusine_type %}
+                        <div class="well">
+
+                            <a href="../../../videodetail/{{ obj.id }}/">
+                                <p><font color="#000000">Title {{ obj.title}}</font></p>
+                                <p><font color="#000000">Cuisine {{ obj.cusine_type}}</font></p>
+                                <video width="200" controls name='media'>
+                                    <source src="{{obj.video.url}}" type="video/mp4">
+                                </video>
+                                    <p><small><font color="#000000"> Uploaded On:-{{ obj.timestamp.date}}</font> </small> </p>
+                                    <p><small><font color="#000000"> Added By:-{{ obj.uploaded_by}}</font></small> </p>
+                            </a>
+                         </div>
+
+                        {% endif %}
+                        {% endfor %}
+
+                </div>
+
+        </div>
+        
+    </section>
+</section></br><br/>
+<script>    
+
+    var da ={ id:'{{instance.id}}', csrfmiddlewaretoken: '{{ csrf_token }}',user:'{{request.user}}'};
+    function report() {
+                            $.ajax({
+                                        type: "POST",
+                                        url: "../../report/",
+                                        data: da,
+                                           success: function(data) {
+                                                                    alert("You have sucessfully reported this video ");
+                                                                    },
+                                        statusCode: {
+                                                      500: function() { 
+                                                                        alert("You already have reported this video ");
+                                                                       }
+                                                      },
+                                    })
+};
+
+    var daaa ={ id:'{{instance.id}}', csrfmiddlewaretoken: '{{ csrf_token }}',user:'{{request.user}}'};
+    function like() {
+                            $.ajax({
+                                        type: "POST",
+                                        url: "../../rating/",
+                                        data: da,
+                                           success: function(data) {
+                                                                    alert("You have sucessfully liked this video ");
+                                                                    },
+                                        statusCode: {
+                                                      500: function() { 
+                                                                        alert("You already have liked this video ");
+                                                                       }
+                                                      },
+                                    })
+};
+
+
+
+function showData(){
+    var name = $("#comment").val();
+    console.log(name);
+    var commentData = { id:'{{instance.id}}', csrfmiddlewaretoken: '{{ csrf_token }}',user:'{{request.user}}', comment:name};
+    $.ajax({
+                type: "POST",
+                url: "../../comments/",
+                data: commentData,
+                success: function(data) {
+                                        location.reload();
+
+                                                                    },
+                                        statusCode: {
+                                                      500: function() { 
+                                                                        alert("You already have liked this video ");
+                                                                       }
+                                                      },
+                                    })
+    }
+(function($) {
+     var element = $('.follow-scroll'),
+         originalY = element.offset().top;
+    
+     // Space between element and top of screen (when scrolling)
+     var topMargin = 20;
+    
+     // Should probably be set in CSS; but here just for emphasis
+     element.css('position', 'relative');
+    
+     $(window).on('scroll', function(event) {
+         var scrollTop = $(window).scrollTop();
+        
+         element.stop(false, false).animate({
+             top: scrollTop < originalY
+                     ? 0
+                     : scrollTop - originalY + topMargin
+         }, 300);
+     });
+ })(jQuery);
+
+
+  var daaa ={ id:'{{instance.id}}', csrfmiddlewaretoken: '{{ csrf_token }}',user:'{{request.user}}'};
+    function addToPlaylist() {
+                            $.ajax({
+                                        type: "POST",
+                                        url: "../../addtoplaylist/",
+                                        data: da,
+                                           success: function(data) {
+                                                                    alert("You have sucessfully added this video to your playlist ");
+                                                                    },
+                                        statusCode: {
+                                                      500: function() { 
+                                                                        alert("You already have added this video to your playlist ");
+                                                                       }
+                                                      },
+                                    })
+};
+
+
+
+
+  var subscr ={csrfmiddlewaretoken: '{{ csrf_token }}',user:'{{instance.uploaded_by.id}}'};
+    function subscribe() {
+                            $.ajax({
+                                        type: "POST",
+                                        url: "../../subscribe/",
+                                        data: subscr,
+                                           success: function(data) {
+                                                                    alert("You have sucessfully Subscribed to this user ");
+                                                                    },
+                                        statusCode: {
+                                                      500: function() { 
+                                                                        alert("You already Subscribed to this user");
+                                                                       }
+                                                      },
+                                    })
+};
+
+
+
+
+    var daaa ={ id:'{{instance.id}}', csrfmiddlewaretoken: '{{ csrf_token }}',user:'{{request.user}}'};
+    function dislike() {
+                            $.ajax({
+                                        type: "POST",
+                                        url: "../../dislikes/",
+                                        data: da,
+                                           success: function(data) {
+                                                                    alert("You have sucessfully disliked this video ");
+                                                                    },
+                                        statusCode: {
+                                                      500: function() { 
+                                                                        alert("You already have disliked this video ");
+                                                                       }
+                                                      },
+                                    })
+};
+
+
+
+
+
+
+
+{% for message in messages %}
+alert("{{message}}");
+{% endfor %}
+
+
+
+$("#transcript").hide();
+$('#pChk').click(function() {
+    if( $(this).is(':checked')) {
+        $("#transcript").show();
+    } else {
+        $("#transcript").hide();
+    }
+}); 
+
+
+</script>
+
+
+
+{% endblock content %}
+
+

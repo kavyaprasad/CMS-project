@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+    <div style= "background-color: rgba(245, 245, 245, 0.4);" class='well col-sm-6 col-sm-offset-3'>
+		<h1 style="color:black;">ADMIN PAGE</h1> 
+		<p style="color:black;">Quiz Filled By Users In The Videos</p>   
+      
+          {% for obj in object_list %}
+          <div class="row">
+            <div class="col-sm-8">
+            <div class="well">
+              <div class="caption">
+                  <p><big><font color="#000000"> Form Entered By :- {{ obj.comment_by}}</font> </big> </p> 
+                    <p><small> Video Name:-  {{ obj.video.title}} </small> </p>
+                    <p><small> Form Data:- {{ obj.value}} </small> </p>
+                    <p><small> Form Filled On:-{{ obj.timestamp.date}} </small> </p>
+                </a>
+
+              </div>
+            </div>
+          </div>
+    </div><br/>
+    {% endfor %}
+    <div class="pagination">
+      <span class="step-links">
+          {% if object_list.has_previous %}
+            <a href="?page={{ object_list.previous_page_number }}&q={{request.GET.q}}"><font size="5">previous</font></a>
+          {% endif %}
+
+          <span class="current">
+              <font size="5"> </font>{{ object_list.number }} {{ object_list.paginator.num_pages }}.
+          </span>
+
+        {% if object_list.has_next %}
+            <a href="?page={{ object_list.next_page_number }}&q={{request.GET.q}}"><font size="5">next</font></a>
+        {% endif %}
+      </span>
+    </div>
+
+{% for message in messages %}
+    <script>alert('{{message}}');
+    console.log(typeof("{{message}}"));
+    </script>
+{% endfor %}
+
+{% endblock content %}

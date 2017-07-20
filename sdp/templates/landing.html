@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+
+
+
+<section id="main-content">
+  <section class="wrapper"> 
+        <div class="row">
+          
+            <div  style="float:left;background-color: rgba(245, 245, 245, 0.4);" class= 'well col-sm- col-sm-offset'>
+            <h1><font color="#000000">{{ instance.title}}</font></h1>
+
+              <video id="my-video" class="video-js" controls preload="auto" width="650" controls autoplay data-setup="{}">
+                <source src="{{instance.video.url}}" type="video/mp4">
+            </video>
+                <p><big><font color="#000000"> Cuisine {{instance.cusine_type}},</font></big><p>
+                <p><small><font color="#000000"> Uploaded On {{ instance.timestamp.date}}</font> </small> </p>
+                <p><small><font color="#000000"> Added By {{ instance.uploaded_by}}</font></small> </p>
+            </div>
+
+                <div style="width: 35%; float:right; background-color: rgba(245, 245, 245, 0.4);" class="well col-xs-2">
+                    <p  class="text-center"><font color="#000000"> Recipe Details</font></p >
+                    <p  class="text-center"><font color="#000000"> {{instance.recipe}}</font></p >
+                </div>
+
+
+
+                <div style="width: 35%; float:right; background-color: rgba(245, 245, 245, 0.4);" class="well col-xs-2">
+
+                    <p  class="text-center"><font color="#000000"> Related Videos</font> </p >
+                        {% for obj in queryset%}
+                        {% if obj.cusine_type == instance.cusine_type %}
+                        <div class="well">
+
+                            <a href="../../../videodetail/{{ obj.id }}/">
+                                <p><font color="#000000">Title {{ obj.title}}</font></p>
+                                <p><font color="#000000">Cuisine {{ obj.cusine_type}}</font></p>
+                                <video width="200" controls name='media'>
+                                    <source src="{{obj.video.url}}" type="video/mp4">
+                                </video>
+                                    <p><small><font color="#000000"> Uploaded On:-{{ obj.timestamp.date}}</font> </small> </p>
+                                    <p><small><font color="#000000"> Added By:-{{ obj.uploaded_by}}</font></small> </p>
+                            </a>
+                         </div>
+
+                        {% endif %}
+                        {% endfor %}
+
+                </div>
+
+
+                <div style="float:left; background-color: rgba(245, 245, 245, 0.4);" class= 'well col-xs-7'>
+
+                    <p><big><font color="#000000">Comments Coming soon</font></big></p>
+
+                </div></br><br/></br><br/></br><br/></br><br/></br><br/></br><br/></br><br/>
+
+
+        </div>
+    </section>
+</section></br><br/>
+
+
+<script>
+</script>
+
+
+{% endblock content %}
+
+
